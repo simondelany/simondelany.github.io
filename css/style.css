@@ -1,0 +1,24 @@
+#mainConatainer {
+  position: abosolute;
+  top: 50%;
+  left: 0%;
+  z-index: 0;
+}
+#canvas {
+  position: absolute;
+  top: 20%;
+  left: 1%;
+  width: 98%;
+  height: 75%;
+  background: #fff;
+  z-index: -1;
+}
+#mainContainer .overlay {
+  position: absolute;
+  padding: 10px;
+  background: #fff;
+  top: 15%;
+  left: 1%;
+  z-index: 1;
+}
+
