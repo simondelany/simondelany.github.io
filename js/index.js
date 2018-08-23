@@ -1,16 +1,25 @@
 var canvas = document.getElementById('canvas');
-var frame = document.createElement('canvas');
-var ctx = frame.getContext('2d');
 var render = document.getElementById('render');
+//canvas.width = render.width;
+//canvas.height = render.height;
+var para = document.getElementById('para');
+var frame = document.getElementById('frame');
+var ctx = frame.getContext('2d');
+
 frame.width = render.width;
 frame.height = render.height;
+frame.src = "res/test.jpg";
 ctx.drawImage(render, 0,0);
-//var renderData = ctx.getImageData(0,0,frame.with, frame.height);
-//var renderPixels = renderData.data;
-var yPos = frame.height -1;
+var renderData = ctx.getImageData(0,0,frame.width, frame.height);
+var renderPixels = []
+for (var i = 0; i < renderData.data.length; i++) {
+  renderPixels.push(renderData.data[i]);
+}
+//para.innerHTML = [renderPixels[0],renderPixels[1],renderPixels[2],renderPixels[3],renderPixels[4],renderPixels[5],renderPixels[6],renderPixels[7],renderPixels[8]];
+var yPos = frame.height;
 var context = canvas.getContext("2d");
-canvas.width = Math.floor(canvas.width*1.5);
-canvas.height = Math.floor(canvas.height*1.5);
+canvas.width = frame.width;//Math.floor(canvas.width*1);
+canvas.height = frame.height;//Math.floor(canvas.height*1);
 var width = canvas.width;
 var height = canvas.height;
 var stride = 4;
@@ -29,18 +38,21 @@ function shuffle(array) {
 
 function fillBuffer() {
   buffer = [];
-  if (yPos > -1 ) {
+  
+  if (yPos > -1) {
     for (var xPos = 0; xPos < width; xPos++) {
       var i = getI(xPos,yPos,frame.width,stride);
-      buffer.push(0);//(renderPixels[i  ]);
-      buffer.push(0);//(renderPixels[i+1]);
-      buffer.push(0);//(renderPixels[i+2]);
+      buffer.push(renderPixels[i  ]);
+      buffer.push(renderPixels[i+1]);
+      buffer.push(renderPixels[i+2]);
       buffer.push(255);
       bIndex.push(xPos);
     } 
   } 
   yPos -= 1;
+  
   shuffle(bIndex);
+  //para.innerHTML = buffer;
 }
 
 
@@ -115,15 +127,20 @@ function cycle() {
     }
   }
   
-  if (pos < width) {
-    pos += 0.1;
+  if (pos != 1 ) { 
+    pos += 0.01;
   }
+
+
+  //setPixel()  
   
   
+
+
+  var density = .02;
   
-  
-  for(var i = 0; i < Math.floor(pos); i ++) {
-    if (bIndex.length < 1) {
+  for(var i = 0; i < Math.floor((width*density)); i ++) {
+    if (bIndex.length == 0) {
       fillBuffer();
     }
   
@@ -131,9 +148,11 @@ function cycle() {
     var iiii = index * stride;
     setPixel(index,10,buffer[iiii],buffer[iiii+1],buffer[iiii+2],255);
   }
+
+  
  
   context.putImageData(imdata,0,0);
 }
 
 
-setInterval(cycle, 100);
+setInterval(cycle, .1);
